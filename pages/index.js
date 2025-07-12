@@ -60,7 +60,16 @@ export default function Home() {
     setTodo({...todo, [e.target.name]: e.target.value})
   }
 
-  // TODO: Add delete/edit handlers here
+  const handleDelete = async (id) => {
+    await fetch(`/api/todos/${id}`, { method: 'DELETE' });
+    // Refresh the todos list after deletion
+    fetchTodos(); // or however you reload the list
+  };
+
+  const handleEdit = (todo) => {
+    // You can open a modal, or navigate to an edit page
+    // Example: router.push(`/edit/${todo.title}`)
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex flex-col justify-center">
@@ -131,7 +140,20 @@ export default function Home() {
                       <div className="font-semibold text-lg text-gray-900 dark:text-white">{item.title}</div>
                       <div className="text-gray-600 dark:text-gray-300">{item.desc}</div>
                     </div>
-                    {/* TODO: Add edit/delete buttons here */}
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        className="bg-purple-600 text-white px-3 py-1 rounded"
+                        onClick={() => handleEdit(item)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="bg-red-600 text-white px-3 py-1 rounded"
+                        onClick={() => handleDelete(item._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
