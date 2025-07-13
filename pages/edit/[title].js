@@ -1,12 +1,10 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import Header from '../../components/Header'
-import Footer from '../../components/Footer'
 
 const Edit = () => {
   const router = useRouter()
-  const { title: id } = router.query
+  const { title: todoId } = router.query
 
   const [todo, setTodo] = useState({title: "", desc: ""})
   const [loading, setLoading] = useState(false)
@@ -14,14 +12,14 @@ const Edit = () => {
   const [initialLoading, setInitialLoading] = useState(true)
 
   useEffect(() => {
-    if (router.isReady && id) {
+    if (router.isReady && todoId) {
       fetchTodo()
     }
-  }, [router.isReady, id])
+  }, [router.isReady, todoId])
 
   const fetchTodo = async () => {
     try {
-      const response = await fetch(`/api/todos/${id}`)
+      const response = await fetch(`/api/todos/${todoId}`)
       if (response.ok) {
         const data = await response.json()
         setTodo(data)
@@ -45,7 +43,7 @@ const Edit = () => {
     setMessage("")
 
     try {
-      const response = await fetch(`/api/todos/${id}`, {
+      const response = await fetch(`/api/todos/${todoId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -58,7 +56,7 @@ const Edit = () => {
       if (response.ok) {
         setMessage("Todo has been updated successfully!")
         setTimeout(() => {
-          router.push('/todos')
+          router.push('/')
         }, 1500)
       } else {
         setMessage(data.error || "Failed to update todo")
@@ -77,13 +75,11 @@ const Edit = () => {
   if (initialLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-dark-900">
-        <Header />
         <div className="container mx-auto px-5 py-24">
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
           </div>
         </div>
-        <Footer />
       </div>
     )
   }
@@ -91,27 +87,24 @@ const Edit = () => {
   if (message === 'Todo not found' || message === 'Failed to fetch todo') {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-dark-900">
-        <Header />
         <div className="container mx-auto px-5 py-24">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Todo Not Found</h1>
             <p className="text-gray-600 dark:text-gray-300 mb-4">{message}</p>
             <button 
-              onClick={() => router.push('/todos')}
+              onClick={() => router.push('/')}
               className="btn-primary"
             >
               Back to Todos
             </button>
           </div>
         </div>
-        <Footer />
       </div>
     )
   }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark-900">
-      <Header />
       <main className="my-2 text-3xl">
         <section className="text-gray-600 dark:text-gray-300 body-font">
           <div className="container px-5 py-24 mx-auto flex flex-wrap items-center">
@@ -160,7 +153,7 @@ const Edit = () => {
                   {loading ? 'Updating...' : 'Update Todo'}
                 </button>
                 <button 
-                  onClick={() => router.push('/todos')}
+                  onClick={() => router.push('/')}
                   className="btn-secondary"
                 >
                   Cancel
@@ -173,7 +166,6 @@ const Edit = () => {
           </div>
         </section>
       </main>
-      <Footer />
     </div>
   )
 }

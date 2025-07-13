@@ -1,9 +1,11 @@
 import { Inter } from 'next/font/google'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const router = useRouter()
   const [todo, setTodo] = useState({title: "", desc: ""})
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
@@ -67,8 +69,8 @@ export default function Home() {
   };
 
   const handleEdit = (todo) => {
-    // You can open a modal, or navigate to an edit page
-    // Example: router.push(`/edit/${todo.title}`)
+    // Navigate to the edit page with the todo ID
+    router.push(`/edit/${todo._id}`);
   };
 
   return (
